@@ -1,0 +1,6 @@
+
+
+http://localhost:8080/actuator/health
+http://localhost:9000/?pgsql=postgres&username=atlas&db=postgres&ns=public
+http://localhost:8080/actuator
+http://localhost:8080/actuator/health

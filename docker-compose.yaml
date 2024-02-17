@@ -1,0 +1,53 @@
+version: "3.8"
+services:
+  app:
+    build:
+      context: .
+    container_name: verifit
+    ports:
+      - 8080:8080
+    depends_on:
+      db:
+        condition: service_healthy
+#    networks:
+#      - fit_network
+  db:
+    image: postgres
+    container_name: postgres
+    hostname: postgres
+    restart: on-failure
+    ports:
+      - 5432:5432
+    # If you change any of it you must delete the volume,
+    # if you have one, and call docker-compose down before a new start
+    environment:
+      - POSTGRES_USER=atlas
+      - POSTGRES_PASSWORD=atlas@123
+      - POSTGRES_DB=fitness
+#    networks:
+#      - fit_network
+    healthcheck:
+      test: [ "CMD-SHELL", "pg_isready -U atlas -d fitness" ]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+    # Uncomment if you want to keep changes to the data,
+    # if commented, the data is wiped after each restart
+    #    volumes:
+    #      - ./postgres:/var/lib/postgresql/data
+    #  http://localhost:9000/?pgsql=postgres&username=atlas&db=postgres&ns=public
+  adminer:
+    image: adminer
+    container_name: adminer
+    hostname: adminer
+    restart: on-failure
+    ports:
+      - 9000:8080
+#    networks:
+#      - fit_network
+    depends_on:
+      db:
+        condition: service_healthy
+#networks:
+#  fit_network:
+#    driver: bridge
